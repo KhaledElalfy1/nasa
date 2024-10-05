@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:nasa_app/features/home/presentation/view/home_view.dart';
-import 'package:nasa_app/features/home/presentation/view_model/soil_moisture_cubit/soil_moisture_cubit.dart';
-import 'package:nasa_app/features/home/presentation/view_model/water_recources_cubit/water_recources_cubit.dart';
-import 'package:nasa_app/features/home/presentation/view_model/weather_cubit/weather_cubit.dart';
+import 'package:nasa_app/features/onboarding/presentation/view/onboarding.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -38,24 +34,11 @@ class _SplashViewState extends State<SplashView> {
 
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => WaterRecoursesCubit()..getWaterRecourses(),
-              ),
-              BlocProvider(
-                create: (context) => SoilMoistureCubit()..getSoilMoistureData(),
-              ),
-              BlocProvider(
-                create: (context) => WeatherCubit()..getWeatherData(),
-              ),
-            ],
-            child: const HomeView(),
-          ),
-        ),
-      );
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Onboarding(),
+          ));
     }
   }
 
