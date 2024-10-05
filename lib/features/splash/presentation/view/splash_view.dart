@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:nasa_app/features/home/presentation/view/home_view.dart';
+import 'package:nasa_app/features/home/presentation/view_model/water_recources_cubit/water_recources_cubit.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -36,7 +38,10 @@ class _SplashViewState extends State<SplashView> {
     if (mounted) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeView(),
+          builder: (context) => BlocProvider(
+            create: (context) => WaterRecoursesCubit()..getWaterRecourses(),
+            child: const HomeView(),
+          ),
         ),
       );
     }

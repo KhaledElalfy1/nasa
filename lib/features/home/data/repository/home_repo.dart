@@ -1,11 +1,11 @@
-import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_app/core/services/api/api_services.dart';
 import 'package:nasa_app/core/services/location/location_services.dart';
-import 'package:nasa_app/features/home/data/model/soil_moisture_id.dart';
 import 'package:nasa_app/features/home/data/model/soil_moisture_model/soil_moisture_model.dart';
+import 'package:nasa_app/features/home/data/model/water_recourse_model.dart';
+
 
 class HomeRepo {
   final ApiServices apiServices;
@@ -15,8 +15,6 @@ class HomeRepo {
   HomeRepo({required this.apiServices});
 
   Future<String> getTaskId() async {
-    final location = await _locationServices.getLocation();
-
     final response = await apiServices.post(
         url: "https://api-connect.eos.com/api/gdw/api",
         contentType: 'application/json',
@@ -47,7 +45,7 @@ class HomeRepo {
           }
         });
     debugPrint("the task id is: ${response.data['task_id']}");
-    return SoilMoistureId.fromJson(response.data).taskId!;
+    return response.data['task_id'];
   }
 
   Future<SoilMoistureModel> getSoilMoisture({required String taskId}) async {
@@ -59,23 +57,47 @@ class HomeRepo {
       //   'api_key': _apiKey,
       // },
     );
-    debugPrint("Soil ctime1: ${response.data}");
-
-    return SoilMoistureModel.fromJson(response.data);
+    if (response.statusCode == 200) {
+      return SoilMoistureModel.fromJson(response.data);
+    } else {
+      throw Exception("Failed to get soil moisture data");
+    }
   }
 
   Future<Either<String, SoilMoistureModel>> getSoilMoistureData() async {
     try {
       String taskId = await getTaskId();
       debugPrint("Our task id is: $taskId");
-      final soilMoisture = await getSoilMoisture(taskId: taskId);
+      Future.delayed(const Duration(seconds: 2));
+      final soilMoisture =
+          await getSoilMoisture(taskId: '923113c8-5ae5-4096-b4d6-7d7e1e17ae7e');
       debugPrint("Soil ctime10: ${soilMoisture.result}");
       return Right(soilMoisture);
-    } on Exception catch (e) {
+    } catch (e) {
       debugPrint(e.toString());
       return Left(e.toString());
     }
   }
 
-  
+  Future<Either<String, WaterRecoursesModel>> getWaterRecourses() async {
+    final location = await _locationServices.getLocation();
+    try {
+      final response = await apiServices.get(
+        url: 'https://api.wateratlas.usf.edu/waterbodies/closest',
+        contentType: 'application/json',
+        params: {
+          'lat': location.latitude,
+          'lng': location.longitude,
+          'accuracy': 100,
+          'len': 10,
+          's': 1,
+        },
+      );
+      debugPrint("Water resources: ${response.data['waterbodies']}");
+      return Right(WaterRecoursesModel.fromJson(response.data));
+    } catch (e) {
+      debugPrint(e.toString());
+      return Left(e.toString());
+    }
+  }
 }
