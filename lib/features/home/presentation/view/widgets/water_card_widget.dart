@@ -49,8 +49,8 @@ class WaterCardWidget extends StatelessWidget {
               ),
               child: Image.asset(
                 waterRecoursesModel.waterbodies[index].waterbody.type == 'Lake'
-                    ? "assets/images/lake.jpg"
-                    : "assets/images/river.jpg",
+                    ? "assets/images/lake.jpeg"
+                    : "assets/images/river.jpeg",
                 fit: BoxFit.cover,
               ),
             ),
