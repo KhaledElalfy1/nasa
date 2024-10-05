@@ -4,6 +4,7 @@ import 'package:location/location.dart';
 import 'package:nasa_app/features/home/presentation/view/home_view.dart';
 import 'package:nasa_app/features/home/presentation/view_model/soil_moisture_cubit/soil_moisture_cubit.dart';
 import 'package:nasa_app/features/home/presentation/view_model/water_recources_cubit/water_recources_cubit.dart';
+import 'package:nasa_app/features/home/presentation/view_model/weather_cubit/weather_cubit.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -45,7 +46,10 @@ class _SplashViewState extends State<SplashView> {
                 create: (context) => WaterRecoursesCubit()..getWaterRecourses(),
               ),
               BlocProvider(
-                create: (context) =>SoilMoistureCubit()..getSoilMoistureData(),
+                create: (context) => SoilMoistureCubit()..getSoilMoistureData(),
+              ),
+              BlocProvider(
+                create: (context) => WeatherCubit()..getWeatherData(),
               ),
             ],
             child: const HomeView(),

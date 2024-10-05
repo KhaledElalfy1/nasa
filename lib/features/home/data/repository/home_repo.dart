@@ -1,11 +1,10 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:nasa_app/core/services/api/api_services.dart';
 import 'package:nasa_app/core/services/location/location_services.dart';
 import 'package:nasa_app/features/home/data/model/soil_moisture_model/soil_moisture_model.dart';
 import 'package:nasa_app/features/home/data/model/water_recourse_model.dart';
-
+import 'package:nasa_app/features/home/data/model/weather_model/weather_model.dart';
 
 class HomeRepo {
   final ApiServices apiServices;
@@ -25,8 +24,8 @@ class HomeRepo {
           "type": "mt_stats",
           "params": {
             "bm_type": "soilmoisture",
-            "date_start": "2023-06-01",
-            "date_end": "2023-07-01",
+            "date_start": "2024-10-5",
+            "date_end": "2025-10-01",
             "geometry": {
               "coordinates": [
                 [
@@ -97,6 +96,23 @@ class HomeRepo {
       return Right(WaterRecoursesModel.fromJson(response.data));
     } catch (e) {
       debugPrint(e.toString());
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, WeatherModel>> getWeather() async {
+    try {
+      final response = await apiServices.get(
+        url: 'http://api.weatherapi.com/v1/current.json',
+        contentType: 'application/json',
+        params: {
+          'key': '686616a54f1f4f71aa250342240510',
+          'q': 'tanta',
+        },
+      );
+      print(response.data);
+      return Right(WeatherModel.fromJson(response.data));
+    } catch (e) {
       return Left(e.toString());
     }
   }

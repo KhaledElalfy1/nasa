@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nasa_app/features/home/presentation/view/widgets/final_crops_view.dart';
 import 'package:nasa_app/features/home/presentation/view/widgets/nearest_recourses_view.dart';
 import 'package:nasa_app/features/home/presentation/view/widgets/soil_moisture_view.dart';
 import 'package:nasa_app/features/home/presentation/view/widgets/weather_view.dart';
@@ -15,6 +16,7 @@ class _HomeViewState extends State<HomeView> {
     NearestWaterRecourseView(),
     WeatherView(),
     SoilMoistureView(),
+    FinalCropsView(),
   ];
   int currentIndex = 0;
   @override
@@ -27,7 +29,7 @@ class _HomeViewState extends State<HomeView> {
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.blue,
         onTap: (value) => setState(() => currentIndex = value),
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.water),
             label: 'Water',
@@ -39,6 +41,12 @@ class _HomeViewState extends State<HomeView> {
           BottomNavigationBarItem(
             icon: Icon(Icons.public),
             label: ' moisture',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.query_stats,
+            ),
+            label: ' Result',
           ),
         ],
       ),
